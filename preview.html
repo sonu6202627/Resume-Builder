@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🎨 Ultimate Resume Designer Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #1a1a2e;
+            --panel-bg: rgba(20, 20, 35, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0c0c14 0%, #1a1a2e 100%);
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 300px 1fr 350px;
+            height: 100vh;
+            gap: 0;
+            max-height: 100vh;
+            overflow: hidden;
+        }
+
+        .templates-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 5px 0 30px rgba(0, 0, 0, 0.4);
+            z-index: 10;
+            min-width: 250px;
+        }
+
+        .templates-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .templates-panel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .templates-panel::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 3px;
+        }
+
+        .panel-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(52, 152, 219, 0.3);
+        }
+
+        .panel-title {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .template-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            text-align: center;
+            position: relative;
+            min-height: 130px;
+        }
+
+        .template-card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .template-card.selected {
+            border-color: #3498db;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.2), rgba(155, 89, 182, 0.2));
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+            animation: glowPulse 2s infinite;
+        }
+
+        .template-preview {
+            height: 100px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .template-number {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: 900;
+        }
+
+        /* PREVIEW PANEL - FIXED FOR FULL VIEW */
+        .preview-panel {
+            background: linear-gradient(135deg, #0f0f1a 0%, #151528 100%);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        /* A4 PREVIEW CONTAINER - FIXED FOR FULL VIEW */
+        .a4-preview-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            position: relative;
+            overflow: auto;
+            width: 100%;
+            height: calc(100vh - 40px);
+        }
+
+        .a4-preview-container::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .a4-preview-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .a4-preview-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 4px;
+        }
+
+        /* A4 FRAME - FIXED SIZE FOR CONSISTENT VIEW */
+        .a4-frame {
+            width: 210mm;
+            min-height: 297mm;
+            background: white;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            margin: auto;
+            transform: scale(0.9);
+            transform-origin: top center;
+        }
+
+        .design-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.4);
+            z-index: 10;
+            min-width: 300px;
+        }
+
+        .design-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .design-panel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .design-panel::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 3px;
+        }
+
+        .control-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .control-section:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #3498db;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #3498db;
+        }
+
+        .photo-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .photo-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 12px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .photo-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #3498db;
+            transform: translateY(-2px);
+        }
+
+        .photo-option.selected {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-color: #3498db;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .slider-container {
+            margin-top: 12px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .slider {
+            width: 100%;
+            height: 5px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #3498db;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .action-btn {
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 13px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .blank-state {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f8f9ff, #ffffff);
+            padding: 30px;
+            min-height: 297mm;
+        }
+
+        .blank-icon {
+            font-size: 70px;
+            color: #3498db;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .blank-title {
+            color: #2c3e50;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .blank-message {
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+            max-width: 350px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(52, 152, 219, 0.4);
+        }
+
+        @keyframes glowPulse {
+            0%, 100% {
+                box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+            }
+            50% {
+                box-shadow: 0 8px 25px rgba(52, 152, 219, 0.6);
+            }
+        }
+
+        .current-selection {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border-left: 4px solid #3498db;
+        }
+
+        .selection-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .selection-label {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .selection-value {
+            font-weight: 700;
+            color: #3498db;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Responsive fixes */
+        @media (max-width: 1400px) {
+            .main-container {
+                grid-template-columns: 280px 1fr 320px;
+            }
+            .a4-frame {
+                transform: scale(0.85);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 250px 1fr 280px;
+            }
+            .a4-frame {
+                transform: scale(0.8);
+            }
+        }
+
+        @media (max-width: 992px) {
+            body {
+                overflow: auto;
+                height: auto;
+            }
+            
+            .main-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr auto;
+                height: auto;
+                overflow: auto;
+            }
+            
+            .templates-panel,
+            .design-panel {
+                height: auto;
+                max-height: 40vh;
+                min-height: 300px;
+                position: relative;
+                z-index: 1;
+            }
+            
+            .a4-frame {
+                margin: 0 auto;
+            }
+            
+            .a4-preview-container {
+                height: 500px;
+                overflow: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr auto;
+            }
+            
+            .templates-panel,
+            .design-panel {
+                max-height: 300px;
+            }
+            
+            .template-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .template-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media print {
+            body {
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            .main-container {
+                display: block !important;
+                height: auto !important;
+                width: 100% !important;
+                grid-template-columns: 1fr !important;
+                grid-template-rows: 1fr !important;
+            }
+            
+            .a4-frame {
+                width: 210mm !important;
+                min-height: 297mm !important;
+                box-shadow: none !important;
+                margin: 0 auto !important;
+                padding: 0 !important;
+                transform: scale(1) !important;
+                position: relative !important;
+                left: 0 !important;
+                top: 0 !important;
+            }
+            
+            .templates-panel,
+            .design-panel,
+            .action-buttons,
+            .control-section,
+            .status-bar {
+                display: none !important;
+            }
+            
+            .a4-preview-container {
+                border: none !important;
+                background: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                overflow: visible !important;
+                height: auto !important;
+            }
+            
+            .preview-panel {
+                padding: 0 !important;
+                margin: 0 !important;
+                background: white !important;
+            }
+        }
+
+        /* Resume content styles */
+        .resume-content {
+            padding: 15mm 20mm;
+            color: #333;
+            line-height: 1.4;
+            min-height: 297mm;
+            width: 210mm;
+            position: relative;
+            font-size: 12px;
+            overflow: hidden;
+            page-break-inside: avoid;
+        }
+
+        .resume-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #3498db;
+        }
+
+        .contact-info {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            font-size: 11px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .contact-icon {
+            color: #3498db;
+            font-size: 10px;
+            width: 16px;
+        }
+
+        .section-title-resume {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 15px 0 10px 0;
+            padding-bottom: 4px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .personal-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 11px;
+        }
+
+        .personal-item {
+            margin-bottom: 8px;
+        }
+
+        .personal-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 3px;
+            font-size: 11px;
+        }
+
+        .education-item, .experience-item {
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+            page-break-inside: avoid;
+        }
+
+        .education-title, .experience-title {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 13px;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .education-details, .experience-details {
+            color: #555;
+            margin: 3px 0;
+            font-size: 11px;
+        }
+
+        .education-year {
+            color: #3498db;
+            font-weight: 600;
+            font-size: 10px;
+            margin-top: 2px;
+        }
+
+        .education-percentage {
+            color: #3498db;
+            font-weight: 600;
+            font-size: 10px;
+            margin-left: 15px;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .experience-duration {
+            color: #3498db;
+            font-weight: 600;
+            font-size: 10px;
+            margin-top: 2px;
+        }
+
+        .language-tag, .skill-tag {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #2c3e50;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin: 3px;
+            border: 1px solid #bbdefb;
+            font-size: 10px;
+            page-break-inside: avoid;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            font-weight: 500;
+        }
+
+        .objective-box {
+            background: #fff8e1;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #ffa000;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            font-size: 11px;
+            page-break-inside: avoid;
+        }
+
+        .fresher-box {
+            background: #e8f4fc;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            font-size: 11px;
+            page-break-inside: avoid;
+        }
+
+        .photo-container {
+            float: left;
+            margin-right: 20px;
+            margin-bottom: 10px;
+            page-break-inside: avoid;
+        }
+
+        .resume-photo {
+            object-fit: cover;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+        }
+
+        .center-photo {
+            text-align: center;
+            margin-bottom: 15px;
+            page-break-inside: avoid;
+        }
+
+        .right-photo {
+            float: right;
+            margin-left: 20px;
+            margin-bottom: 10px;
+            page-break-inside: avoid;
+        }
+
+        .top-photo {
+            text-align: center;
+            margin-bottom: 20px;
+            page-break-inside: avoid;
+        }
+
+        .template-2 .resume-header {
+            padding: 15px;
+            margin: -15mm -20mm 15px -20mm;
+        }
+
+        .template-7 .resume-content {
+            border-width: 10px;
+            padding: 12mm 15mm;
+        }
+
+        .content-fix {
+            page-break-inside: avoid;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="templates-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <i class="fas fa-th-large"></i>
+                    5 Templates
+                </div>
+                <div style="color: rgba(255, 255, 255, 0.7); font-size: 12px;">
+                    Choose your perfect template
+                </div>
+            </div>
+
+            <div class="template-grid" id="templateGrid"></div>
+
+            <div class="status-bar">
+                <div>Selected: <span id="selectedTemplateName">Professional</span></div>
+                <div id="templateCount">1/15</div>
+            </div>
+        </div>
+
+        <div class="preview-panel">
+            <div class="a4-preview-container">
+                <div class="a4-frame" id="a4Frame"></div>
+            </div>
+        </div>
+
+        <div class="design-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <i class="fas fa-sliders-h"></i>
+                    Design Controls
+                </div>
+                <div style="color: rgba(255, 255, 255, 0.7); font-size: 12px;">
+                    Customize every detail
+                </div>
+            </div>
+
+            <div class="control-section">
+                <div class="section-title">
+                    <i class="fas fa-camera"></i>
+                    Photo Settings
+                </div>
+
+                <div style="margin-bottom: 12px;">
+                    <div class="slider-label">
+                        <span>Photo Size</span>
+                        <span id="photoSizeValue">Medium</span>
+                    </div>
+                    <input type="range" min="1" max="3" value="2" class="slider" id="photoSizeSlider" oninput="updatePhotoSize(this.value)">
+                </div>
+
+                <div>
+                    <div style="font-size: 13px; color: rgba(255, 255, 255, 0.8); margin-bottom: 8px;">Photo Shape</div>
+                    <div class="photo-options">
+                        <div class="photo-option" data-shape="square" onclick="updatePhotoShape(this)">
+                            <i class="fas fa-square"></i>
+                            <div style="font-size: 10px; margin-top: 4px;">Square</div>
+                        </div>
+                        <div class="photo-option selected" data-shape="rounded" onclick="updatePhotoShape(this)">
+                            <i class="fas fa-square-rounded"></i>
+                            <div style="font-size: 10px; margin-top: 4px;">Rounded</div>
+                        </div>
+                        <div class="photo-option" data-shape="circle" onclick="updatePhotoShape(this)">
+                            <i class="fas fa-circle"></i>
+                            <div style="font-size: 10px; margin-top: 4px;">Circle</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="current-selection">
+                <div class="selection-item">
+                    <span class="selection-label">Template:</span>
+                    <span class="selection-value" id="currentTemplate">Professional</span>
+                </div>
+                <div class="selection-item">
+                    <span class="selection-label">Photo Size:</span>
+                    <span class="selection-value" id="currentPhotoSize">Medium</span>
+                </div>
+                <div class="selection-item">
+                    <span class="selection-label">Photo Shape:</span>
+                    <span class="selection-value" id="currentPhotoShape">Rounded</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-btn btn-download" onclick="downloadPDF()">
+                    <i class="fas fa-download"></i> Download PDF
+                </button>
+            </div>
+
+            <div class="control-section" style="margin-top: 20px;">
+                <div class="section-title">
+                    <i class="fas fa-file-pdf"></i>
+                    PDF Settings
+                </div>
+                <div style="color: rgba(255, 255, 255, 0.7); font-size: 12px; margin-bottom: 8px;">
+                    Optimized for 1-3 MB file size
+                </div>
+                <div class="slider-label">
+                    <span>Quality</span>
+                    <span id="pdfQualityValue">Medium</span>
+                </div>
+                <input type="range" min="1" max="3" value="2" class="slider" id="pdfQualitySlider" oninput="updatePDFQuality(this.value)">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <script>
+        const config = {
+            templates: [
+                { id: 1, name: 'Professional', layout: 'left-photo', styleClass: 'template-1' },
+                { id: 2, name: 'Modern', layout: 'center-photo', styleClass: 'template-2' },
+                { id: 3, name: 'Clean', layout: 'right-photo', styleClass: 'template-3' },
+                { id: 4, name: 'Executive', layout: 'no-photo', styleClass: 'template-4' },
+                { id: 5, name: 'Simple', layout: 'top-photo', styleClass: 'template-5' }
+            ],
+            currentTemplate: 1,
+            photoSize: 'medium',
+            photoShape: 'rounded',
+            pdfQuality: 'medium',
+            resumeData: null,
+            hasData: false
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadResumeData();
+            initializeDesigner();
+            renderResume();
+        });
+
+        function loadResumeData() {
+            const name = localStorage.getItem('resume_name');
+
+            if (!name) {
+                config.hasData = false;
+                return;
+            }
+
+            try {
+                let photo = localStorage.getItem('resume_photo');
+                let showPhoto = localStorage.getItem('resume_showPhoto') === 'true';
+                
+                // STRICT FIX: Agar photo upload nahi hua ho to photo bilkul bhi show nahi hoga
+                if (!photo || photo === '' || photo === 'null' || photo === 'undefined') {
+                    photo = null;
+                    showPhoto = false;
+                }
+                
+                // Agar data:image format nahi hai to photo ignore hoga
+                if (photo && !photo.startsWith('data:image/')) {
+                    photo = null;
+                    showPhoto = false;
+                }
+
+                config.resumeData = {
+                    name: name || 'Your Name',
+                    father: localStorage.getItem('resume_father') || 'Father Name',
+                    email: localStorage.getItem('resume_email') || 'email@example.com',
+                    mobile: localStorage.getItem('resume_mobile') || '000-000-0000',
+                    dob: localStorage.getItem('resume_dob') || '2000-01-01',
+                    gender: localStorage.getItem('resume_gender') || 'Male',
+                    marital: localStorage.getItem('resume_marital') || 'Single',
+                    address: localStorage.getItem('resume_address') || 'Your Address',
+                    objective: localStorage.getItem('resume_objective') || 'Career objective goes here...',
+                    isFresher: localStorage.getItem('resume_isFresher') === 'true',
+                    showPhoto: showPhoto,
+                    photo: photo,
+                    educations: JSON.parse(localStorage.getItem('resume_educations') || '[{"q":"10th","i":"School Name","y":"2018","p":"65%"},{"q":"12th","i":"College Name","y":"2020","p":"60%"}]'),
+                    experiences: JSON.parse(localStorage.getItem('resume_experiences') || '[{"r":"Operator","c":"JSW Company","e":"2","j":"01-01-2022"}]'),
+                    skills: JSON.parse(localStorage.getItem('resume_skills') || '["Computer Operator", "Data Entry Operator"]'),
+                    languages: JSON.parse(localStorage.getItem('resume_langs') || '["English", "Hindi"]')
+                };
+
+                config.hasData = true;
+            } catch (error) {
+                console.error('Error loading data:', error);
+                config.hasData = false;
+            }
+        }
+
+        function initializeDesigner() {
+            initializeTemplates();
+            updateTemplateCount();
+        }
+
+        function initializeTemplates() {
+            const container = document.getElementById('templateGrid');
+            container.innerHTML = '';
+
+            config.templates.forEach(template => {
+                const card = document.createElement('div');
+                card.className = `template-card ${template.id === config.currentTemplate ? 'selected' : ''}`;
+                card.dataset.id = template.id;
+
+                const colors = [
+                    ['#2c3e50', '#3498db'],
+                    ['#3498db', '#2c3e50'],
+                    ['#2c3e50', '#e74c3c'],
+                    ['#1a1a2e', '#e74c3c'],
+                    ['#27ae60', '#2ecc71']
+                ];
+
+                card.innerHTML = `
+                    <div class="template-preview" style="background: linear-gradient(135deg, ${colors[template.id-1][0]}, ${colors[template.id-1][1]});">
+                        ${template.name}
+                        <span class="template-number">${template.id}</span>
+                    </div>
+                    <div style="font-size: 10px; color: white; text-align: center; font-weight: 600;">${template.name}</div>
+                `;
+
+                card.addEventListener('click', () => selectTemplate(template));
+                container.appendChild(card);
+            });
+
+            updateCurrentSelections();
+        }
+
+        function selectTemplate(template) {
+            config.currentTemplate = template.id;
+
+            document.querySelectorAll('.template-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`.template-card[data-id="${template.id}"]`).classList.add('selected');
+
+            document.getElementById('selectedTemplateName').textContent = template.name;
+            document.getElementById('currentTemplate').textContent = template.name;
+            updateTemplateCount();
+            renderResume();
+        }
+
+        function updatePhotoSize(value) {
+            const sizes = ['small', 'medium', 'large'];
+            config.photoSize = sizes[value - 1];
+
+            const sizeLabels = ['Small', 'Medium', 'Large'];
+            const sizeValue = sizeLabels[value - 1];
+
+            document.getElementById('photoSizeValue').textContent = sizeValue;
+            document.getElementById('currentPhotoSize').textContent = sizeValue;
+
+            renderResume();
+        }
+
+        function updatePhotoShape(element) {
+            config.photoShape = element.dataset.shape;
+
+            document.querySelectorAll('.photo-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+
+            const shapeLabels = {
+                'square': 'Square',
+                'rounded': 'Rounded', 
+                'circle': 'Circle'
+            };
+            document.getElementById('currentPhotoShape').textContent = shapeLabels[config.photoShape];
+
+            renderResume();
+        }
+
+        function updatePDFQuality(value) {
+            const qualities = ['low', 'medium', 'high'];
+            config.pdfQuality = qualities[value - 1];
+
+            const qualityLabels = ['Low', 'Medium', 'High'];
+            document.getElementById('pdfQualityValue').textContent = qualityLabels[value - 1];
+        }
+
+        function updateCurrentSelections() {
+            const template = config.templates.find(t => t.id === config.currentTemplate);
+            document.getElementById('currentTemplate').textContent = template.name;
+        }
+
+        function updateTemplateCount() {
+            document.getElementById('templateCount').textContent =
+                `${config.currentTemplate}/5`;
+        }
+
+        function renderResume() {
+            const frame = document.getElementById('a4Frame');
+
+            if (!config.hasData) {
+                frame.innerHTML = getBlankResumeHTML();
+                frame.className = 'a4-frame';
+                return;
+            }
+
+            frame.innerHTML = getResumeHTML();
+            frame.className = 'a4-frame';
+        }
+
+        function getBlankResumeHTML() {
+            return `
+                <div class="blank-state">
+                    <div class="blank-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="blank-title">No Resume Data</div>
+                    <div class="blank-message">
+                        Fill out the resume form to see live preview here.
+                        Customize templates and photo settings.
+                    </div>
+                    <button class="start-btn" onclick="goToForm()">
+                        <i class="fas fa-edit"></i>
+                        Fill Resume Form
+                    </button>
+                </div>
+            `;
+        }
+
+        function getResumeHTML() {
+            const template = config.templates.find(t => t.id === config.currentTemplate);
+            const photoSize = getPhotoDimensions();
+            const photoBorderRadius = getPhotoBorderRadius();
+            const data = config.resumeData;
+
+            function getPhotoHTML() {
+                // STRICT FIX: Agar photo nahi hai ya showPhoto false hai to kuch bhi return nahi karega
+                if (!data.photo || !data.showPhoto || data.photo === '' || data.photo === 'null') {
+                    return '';
+                }
+                
+                if (!data.photo.startsWith('data:image/')) {
+                    return '';
+                }
+
+                const photoStyle = `width: ${photoSize.width}; height: ${photoSize.height}; border-radius: ${photoBorderRadius}; border: 2px solid #3498db; object-fit: cover;`;
+
+                switch(template.layout) {
+                    case 'left-photo':
+                        return `
+                            <div class="photo-container">
+                                <img src="${data.photo}" alt="Photo" style="${photoStyle}">
+                            </div>
+                        `;
+                    case 'right-photo':
+                        return `
+                            <div class="right-photo">
+                                <img src="${data.photo}" alt="Photo" style="${photoStyle}">
+                            </div>
+                        `;
+                    case 'center-photo':
+                        return `
+                            <div class="center-photo">
+                                <img src="${data.photo}" alt="Photo" style="${photoStyle}">
+                            </div>
+                        `;
+                    case 'top-photo':
+                        return `
+                            <div class="top-photo">
+                                <img src="${data.photo}" alt="Photo" style="${photoStyle}">
+                            </div>
+                        `;
+                    default:
+                        return '';
+                }
+            }
+
+            let educationHTML = '';
+            if (data.educations && data.educations.length > 0) {
+                educationHTML = data.educations.map(edu => `
+                    <div class="education-item content-fix">
+                        <div class="education-title">
+                            ${edu.q || 'Qualification'} – ${edu.i || 'School/College Name'}
+                        </div>
+                        <div class="education-year">
+                            Passing Year: ${edu.y || 'Year'}
+                            ${edu.p ? `<span class="education-percentage">Percentage: ${edu.p}</span>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            let experienceHTML = '';
+            if (data.isFresher) {
+                experienceHTML = `
+                    <div class="fresher-box">
+                        <strong>Fresh Graduate</strong> - Seeking professional opportunity to apply academic knowledge and gain practical experience.
+                    </div>
+                `;
+            } else if (data.experiences && data.experiences.length > 0) {
+                experienceHTML = data.experiences.map(exp => `
+                    <div class="experience-item content-fix">
+                        <div class="experience-title">
+                            ${exp.r || 'Designation'} – ${exp.c || 'Company Name'}
+                        </div>
+                        <div class="experience-details">
+                            Experience: ${exp.e || '0'} Years
+                        </div>
+                        ${exp.j ? `<div class="experience-duration">Joining Date: ${exp.j}</div>` : ''}
+                    </div>
+                `).join('');
+            }
+
+            let skillsHTML = '';
+            if (data.skills && data.skills.length > 0) {
+                skillsHTML = data.skills.map(skill => `
+                    <span class="skill-tag">${skill}</span>
+                `).join('');
+            }
+
+            let languagesHTML = '';
+            if (data.languages && data.languages.length > 0) {
+                languagesHTML = data.languages.map(lang => `
+                    <span class="language-tag">${lang}</span>
+                `).join('');
+            }
+
+            const template2Header = template.id === 2 ? '<div class="resume-header">' : '';
+            const template2HeaderClose = template.id === 2 ? '</div>' : '';
+
+            return `
+                <div class="resume-content ${template.styleClass}">
+                    ${template2Header}
+
+                    ${getPhotoHTML()}
+
+                    <div class="resume-name">${data.name}</div>
+
+                    <div class="contact-info">
+                        ${data.email ? `
+                            <div class="contact-item">
+                                <span class="contact-icon"><i class="fas fa-envelope"></i></span>
+                                <span>${data.email}</span>
+                            </div>
+                        ` : ''}
+
+                        ${data.mobile ? `
+                            <div class="contact-item">
+                                <span class="contact-icon"><i class="fas fa-phone"></i></span>
+                                <span>${data.mobile}</span>
+                            </div>
+                        ` : ''}
+
+                        ${data.address ? `
+                            <div class="contact-item">
+                                <span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>
+                                <span>${data.address}</span>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    ${template2HeaderClose}
+
+                    <div class="section-title-resume">Personal Details</div>
+                    <div class="personal-grid">
+                        ${data.father ? `
+                            <div class="personal-item">
+                                <div class="personal-label">Father's Name</div>
+                                <div>${data.father}</div>
+                            </div>
+                        ` : ''}
+
+                        ${data.dob ? `
+                            <div class="personal-item">
+                                <div class="personal-label">Date of Birth</div>
+                                <div>${formatDate(data.dob)}</div>
+                            </div>
+                        ` : ''}
+
+                        ${data.gender ? `
+                            <div class="personal-item">
+                                <div class="personal-label">Gender</div>
+                                <div>${data.gender}</div>
+                            </div>
+                        ` : ''}
+
+                        ${data.marital ? `
+                            <div class="personal-item">
+                                <div class="personal-label">Marital Status</div>
+                                <div>${data.marital}</div>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    ${languagesHTML ? `
+                        <div class="section-title-resume">Languages Known</div>
+                        <div style="margin-bottom: 12px;">
+                            ${languagesHTML}
+                        </div>
+                    ` : ''}
+
+                    <div class="section-title-resume">Education</div>
+                    ${educationHTML || '<div style="text-align: center; color: #888; padding: 10px; font-size: 11px;">No education details</div>'}
+
+                    <div class="section-title-resume">Work Experience</div>
+                    ${experienceHTML || '<div style="text-align: center; color: #888; padding: 10px; font-size: 11px;">No work experience</div>'}
+
+                    ${skillsHTML ? `
+                        <div class="section-title-resume">Skills</div>
+                        <div style="margin-bottom: 12px;">
+                            ${skillsHTML}
+                        </div>
+                    ` : ''}
+
+                    ${data.objective ? `
+                        <div class="section-title-resume">Career Objective</div>
+                        <div class="objective-box">
+                            ${data.objective}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            try {
+                const date = new Date(dateStr);
+                const day = date.getDate().toString().padStart(2, '0');
+                const month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][date.getMonth()];
+                const year = date.getFullYear();
+                return `${day} ${month} ${year}`;
+            } catch(e) {
+                return dateStr;
+            }
+        }
+
+        function getPhotoDimensions() {
+            switch(config.photoSize) {
+                case 'small': return { width: '90px', height: '110px' };
+                case 'medium': return { width: '100px', height: '130px' };
+                case 'large': return { width: '110px', height: '140px' };
+                default: return { width: '100px', height: '130px' };
+            }
+        }
+
+        function getPhotoBorderRadius() {
+            switch(config.photoShape) {
+                case 'square': return '4px';
+                case 'rounded': return '10px';
+                case 'circle': return '50%';
+                default: return '10px';
+            }
+        }
+
+        function goToForm() {
+            window.location.href = 'index.html';
+        }
+
+        async function downloadPDF() {
+            if (!config.hasData) {
+                alert('Please fill the form first');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const element = document.getElementById('a4Frame');
+
+            const originalContent = element.innerHTML;
+            const originalTransform = element.style.transform;
+            const originalClasses = element.className;
+            element.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%; color: #666; font-size: 16px; background: white;">Generating PDF... Please wait</div>';
+            element.style.transform = 'scale(1)';
+            element.className = 'a4-frame';
+
+            try {
+                let scale, quality;
+                switch(config.pdfQuality) {
+                    case 'low':
+                        scale = 1.5;
+                        quality = 0.7;
+                        break;
+                    case 'medium':
+                        scale = 2;
+                        quality = 0.8;
+                        break;
+                    case 'high':
+                        scale = 2.5;
+                        quality = 0.9;
+                        break;
+                    default:
+                        scale = 2;
+                        quality = 0.8;
+                }
+
+                const tempElement = document.createElement('div');
+                tempElement.style.width = '210mm';
+                tempElement.style.height = '297mm';
+                tempElement.style.position = 'fixed';
+                tempElement.style.left = '-9999px';
+                tempElement.style.top = '0';
+                tempElement.style.backgroundColor = 'white';
+                tempElement.style.overflow = 'hidden';
+
+                const resumeContent = getResumeHTML();
+                tempElement.innerHTML = `
+                    <div style="width: 210mm; height: 297mm; padding: 0; margin: 0; background: white;">
+                        ${resumeContent}
+                    </div>
+                `;
+                document.body.appendChild(tempElement);
+
+                const images = tempElement.getElementsByTagName('img');
+                if (images.length > 0) {
+                    const imagePromises = Array.from(images).map(img => {
+                        if (img.complete) return Promise.resolve();
+                        return new Promise(resolve => {
+                            img.onload = resolve;
+                            img.onerror = resolve;
+                        });
+                    });
+                    await Promise.all(imagePromises);
+                }
+
+                const canvas = await html2canvas(tempElement, {
+                    scale: scale,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#FFFFFF',
+                    imageTimeout: 5000,
+                    removeContainer: true
+                });
+
+                document.body.removeChild(tempElement);
+
+                const imgData = canvas.toDataURL('image/jpeg', quality);
+                const fileSizeKB = Math.round(imgData.length / 1024);
+
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                const imgWidth = 210;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+
+                const fileName = `${config.resumeData.name.replace(/\s+/g, '_')}_Resume.pdf`;
+                pdf.save(fileName);
+
+                alert(`PDF downloaded successfully!\nFile size: ${fileSizeKB} KB\nFile name: ${fileName}`);
+
+            } catch (error) {
+                console.error('Error generating PDF:', error);
+                alert('Error generating PDF. Please try again.');
+            } finally {
+                element.innerHTML = originalContent;
+                element.style.transform = originalTransform;
+                element.className = originalClasses;
+                renderResume();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Primary SEO -->
+    <title>Free Resume Builder Online – Create Professional CV in Minutes</title>
+    <meta name="description" content="Create a professional resume online for free. Easy resume builder for freshers and job seekers. Download CV in PDF instantly.">
+    <meta name="keywords" content="resume builder, free resume, online resume, cv maker, job resume, professional resume, resume generator">
+    <meta name="author" content="Sonu Kumar">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Free Resume Builder Online – Create Professional CV">
+    <meta property="og:description" content="Build a job-ready resume online for free. Download your CV in PDF and get hired faster.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourwebsiteurl.com">
+    <meta property="og:image" content="https://yourwebsiteurl.com/preview-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free Resume Builder Online">
+    <meta name="twitter:description" content="Create your professional resume online for free. ATS-friendly resume templates.">
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        header {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            color: #0a3d62;
+            padding: 50px 20px;
+            text-align: center;
+            border-bottom: 4px solid #0a3d62;
+        }
+
+        header h1 {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a5276;
+        }
+
+        section {
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .welcome-box, .seo-box {
+            background: white;
+            padding: 30px;
+            max-width: 800px;
+            margin: 20px auto;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        h2, h3 {
+            color: #0a3d62;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #333;
+        }
+
+        .create-btn {
+            margin-top: 25px;
+            padding: 15px 35px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .create-btn:hover {
+            background: #219150;
+        }
+
+        /* POPUP */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 999;
+        }
+
+        .popup-content {
+            background: white;
+            width: 90%;
+            max-width: 450px;
+            padding: 30px;
+            margin: 15% auto;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+        }
+
+        .popup-content h3 {
+            color: #0a3d62;
+            font-size: 22px;
+        }
+
+        .popup-btn {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: #0a3d62;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .popup-btn:hover {
+            background: #08314f;
+        }
+
+        footer {
+            background: #0a3d62;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Free Resume Builder Online</h1>
+    <p>Create a Professional Resume & Get Your Dream Job</p>
+</header>
+
+<section>
+    <div class="welcome-box">
+        <h2>Welcome to the Best Online Resume Builder 👋</h2>
+
+        <p>
+            Our free resume builder helps you create a professional,
+            ATS-friendly, and job-ready resume in just a few minutes.
+            No design or coding skills required.
+        </p>
+
+        <p>
+            💼 <strong>Best Wishes for Your Career:</strong><br>
+            May your resume help you get shortlisted, clear interviews,
+            and land your dream job faster.
+        </p>
+
+        <button class="create-btn" onclick="openPopup()">
+            Create New Resume
+        </button>
+    </div>
+
+    <div class="seo-box">
+        <h2>Why Use Our Resume Builder?</h2>
+        <p>
+            ✔ Free & Easy to Use<br>
+            ✔ ATS-Friendly Resume Templates<br>
+            ✔ Perfect for Freshers & Professionals<br>
+            ✔ Download Resume in PDF Instantly
+        </p>
+    </div>
+
+    <div class="seo-box">
+        <h2>How This Resume Builder Works</h2>
+        <p>
+            Step 1: Enter your personal, education, and work details.<br>
+            Step 2: Choose a professional resume format.<br>
+            Step 3: Download your resume as a PDF and apply for jobs.
+        </p>
+    </div>
+</section>
+
+<!-- POPUP -->
+<div class="popup" id="popup">
+    <div class="popup-content">
+        <h3>You’re Just One Step Away 🚀</h3>
+        <p>
+            On the next page, you will enter your personal, education,
+            experience, and skills details to create a professional resume.
+        </p>
+
+        <button class="popup-btn" onclick="goToForm()">
+            Create My Resume
+        </button>
+    </div>
+</div>
+
+<footer>
+    © 2026 Free Resume Builder by Sonu Kumar | All Rights Reserved
+</footer>
+
+<script>
+    function openPopup() {
+        document.getElementById("popup").style.display = "block";
+    }
+
+    function goToForm() {
+        window.location.href = "form.html";
+    }
+</script>
+
+</body>
+</html>

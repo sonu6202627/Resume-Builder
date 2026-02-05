@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Premium Resume Builder - Final</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body{ margin:0; font-family:"Segoe UI", Arial, sans-serif; background:linear-gradient(135deg,#667eea,#764ba2); min-height:100vh; padding-bottom: 50px; }
+        header{ color:#fff; padding:40px; text-align:center; }
+        .container{ max-width:1200px; margin:20px auto; background:#fff; border-radius:20px; padding:40px; box-shadow:0 25px 50px rgba(0,0,0,0.25); }
+        .section{ margin-top:45px; padding: 25px; border: 1px solid #f0f0f0; border-radius: 15px; background: #fff; }
+        .section h2{ color:#4b0082; border-bottom:3px solid #667eea; padding-bottom:8px; margin-top: 0; display: inline-block; margin-bottom: 20px;}
+        label{ font-weight:600; margin-top:14px; display:block; color:#333; }
+        
+        /* Interactive Input Border */
+        input, textarea, select{ width:100%; padding:12px; margin-top:6px; border-radius:10px; border:2px solid #ddd; font-size:15px; transition:0.4s; box-sizing: border-box; }
+        input:focus, textarea:focus, select:focus{ border-color:#764ba2; box-shadow:0 0 12px rgba(118,75,162,0.3); outline:none; background-color: #fdfaff; }
+
+        .grid{ display:grid; grid-template-columns:1fr 1fr; gap:25px; }
+        .card{ background:#f8f9ff; border-left:6px solid #667eea; padding:20px; border-radius:12px; margin-top:15px; position: relative; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        
+        .action-btns{ position: absolute; right: 10px; top: 10px; display: flex; gap: 5px; }
+        .btn-edit{ background: #ffa500; color: white; border: none; border-radius: 5px; cursor: pointer; padding: 5px 10px; }
+        .btn-del{ background: #ff4d4d; color: white; border: none; border-radius: 5px; cursor: pointer; padding: 5px 10px; }
+        
+        .btn{ width:100%; margin-top:30px; padding:20px; background:linear-gradient(135deg,#43cea2,#185a9d); color:white; font-size:22px; border:none; border-radius:50px; cursor:pointer; font-weight: bold; transition: 0.3s; }
+        .btn:hover{ transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        
+        .btn-small{ margin-top:12px; padding:12px 25px; background:#764ba2; color:white; border:none; border-radius:25px; cursor:pointer; font-weight: 600; }
+        .tag{ display:inline-block; background:#667eea; color:white; padding:8px 16px; border-radius:25px; margin:6px; font-size:14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        
+        .fresher-box { background: #eef2ff; padding: 15px; border-radius: 12px; margin-top: 10px; display: flex; align-items: center; gap: 10px; border: 1px dashed #667eea; }
+        .fresher-box input { width: auto; margin: 0; cursor: pointer; }
+        #photoPreview { width: 120px; height: 140px; border-radius: 10px; object-fit: cover; margin-top: 15px; display: none; border: 3px solid #667eea; }
+        
+        .unsaved-notice { 
+            background: #fff3cd; 
+            border: 1px solid #ffeaa7; 
+            border-radius: 10px; 
+            padding: 10px 15px; 
+            margin-top: 10px; 
+            color: #856404;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .language-tag { 
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            margin: 6px;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .remove-btn {
+            cursor: pointer;
+            margin-left: 8px;
+            font-weight: bold;
+            color: white;
+            background: #ff4d4d;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Premium Resume Builder</h1>
+    <p>Professional, Modern & Easy to Use</p>
+</header>
+
+<div class="container">
+
+    <div class="section">
+        <h2>1. Personal Information</h2>
+        <div class="grid">
+            <div><label>Full Name *</label><input id="name" placeholder="Sonu Kumar"></div>
+            <div><label>Father's Name</label><input id="father" placeholder="Father's Name"></div>
+            <div><label>Email Address</label><input id="email" type="email" placeholder="example@mail.com"></div>
+            <div><label>Mobile Number</label><input id="mobile" placeholder="+91 0000000000"></div>
+            <div><label>Date of Birth</label><input type="date" id="dob"></div>
+            <div><label>Gender</label><select id="gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+            <div><label>Marital Status</label><select id="marital"><option>Single</option><option>Married</option></select></div>
+            <div>
+                <label>Languages Known</label>
+                <select id="languageSelect">
+                    <option value="">Select Language</option>
+                    <optgroup label="Major Indian Languages">
+                        <option>Hindi</option>
+                        <option>English</option>
+                        <option>Bengali</option>
+                        <option>Telugu</option>
+                        <option>Marathi</option>
+                        <option>Tamil</option>
+                        <option>Urdu</option>
+                        <option>Gujarati</option>
+                        <option>Kannada</option>
+                        <option>Odia</option>
+                        <option>Malayalam</option>
+                        <option>Punjabi</option>
+                        <option>Assamese</option>
+                        <option>Maithili</option>
+                        <option>Santali</option>
+                        <option>Kashmiri</option>
+                        <option>Nepali</option>
+                        <option>Sindhi</option>
+                        <option>Konkani</option>
+                        <option>Dogri</option>
+                        <option>Manipuri</option>
+                        <option>Bodo</option>
+                        <option>Sanskrit</option>
+                    </optgroup>
+                    <optgroup label="International Languages">
+                        <option>Arabic</option>
+                        <option>Chinese (Mandarin)</option>
+                        <option>Spanish</option>
+                        <option>French</option>
+                        <option>German</option>
+                        <option>Russian</option>
+                        <option>Japanese</option>
+                        <option>Korean</option>
+                        <option>Portuguese</option>
+                        <option>Italian</option>
+                        <option>Turkish</option>
+                        <option>Vietnamese</option>
+                        <option>Thai</option>
+                        <option>Indonesian</option>
+                        <option>Malay</option>
+                        <option>Persian (Farsi)</option>
+                        <option>Swahili</option>
+                        <option>Dutch</option>
+                        <option>Polish</option>
+                        <option>Ukrainian</option>
+                        <option>Romanian</option>
+                        <option>Greek</option>
+                        <option>Czech</option>
+                        <option>Swedish</option>
+                        <option>Danish</option>
+                        <option>Norwegian</option>
+                        <option>Finnish</option>
+                        <option>Hungarian</option>
+                        <option>Hebrew</option>
+                    </optgroup>
+                    <optgroup label="Regional & Tribal Languages">
+                        <option>Awadhi</option>
+                        <option>Bhojpuri</option>
+                        <option>Rajasthani</option>
+                        <option>Haryanvi</option>
+                        <option>Chhattisgarhi</option>
+                        <option>Magahi</option>
+                        <option>Tulu</option>
+                        <option>Santhali</option>
+                        <option>Gondi</option>
+                        <option>Kurukh</option>
+                        <option>Bhili</option>
+                        <option>Ho</option>
+                        <option>Khandeshi</option>
+                        <option>Kumaoni</option>
+                        <option>Garhwali</option>
+                    </optgroup>
+                    <option value="custom">➕ Add Custom Language...</option>
+                </select>
+                <div id="customLangInput" style="display: none; margin-top: 10px;">
+                    <input type="text" id="customLanguage" placeholder="Enter your language name" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #667eea;">
+                    <button class="btn-small" onclick="addCustomLang()" style="margin-top: 5px;">Add Custom Language</button>
+                </div>
+                <div id="langList" style="margin-top: 10px;"></div>
+            </div>
+        </div>
+        <label>Full Address</label>
+        <textarea id="address" rows="3" placeholder="House No, Street, City, State, PIN"></textarea>
+    </div>
+
+    <div class="section">
+        <h2>2. Education</h2>
+        <div id="eduFields">
+            <label>Qualification / Degree *</label><input id="eduQual" placeholder="e.g. 10th, 12th, B.A, B.Tech">
+            <label>Institute / School / University</label><input id="eduInst" placeholder="e.g. Delhi University">
+            <div class="grid">
+                <div><label>Passing Year</label><input id="eduYear" placeholder="e.g. 2022"></div>
+                <div><label>Percentage / CGPA</label><input id="eduPercent" placeholder="e.g. 85% or 9.0 CGPA"></div>
+            </div>
+            <button class="btn-small" onclick="addEducation()">+ Save Education</button>
+        </div>
+        <div class="unsaved-notice" id="eduNotice">⚠ You have unsaved education data. It will be saved automatically when you generate resume.</div>
+        <div id="educationList"></div>
+    </div>
+
+    <div class="section">
+        <h2>3. Work Experience</h2>
+        <div class="fresher-box">
+            <input type="checkbox" id="isFresher" onchange="toggleExp()"> 
+            <label style="margin:0"><b>I am a Fresher</b> (Check this if you have no work experience)</label>
+        </div>
+        <div id="expFields">
+            <label>Company Name</label><input id="company" placeholder="e.g. Google">
+            <label>Job Role / Designation</label><input id="role" placeholder="e.g. Software Developer">
+            <div class="grid">
+                <div><label>Joining Date</label><input type="date" id="joinDate"></div>
+                <div><label>Total Experience (Years/Months)</label><input id="experience" placeholder="e.g. 2 Years"></div>
+            </div>
+            <button class="btn-small" onclick="addExperience()">+ Save Experience</button>
+        </div>
+        <div class="unsaved-notice" id="expNotice">⚠ You have unsaved experience data. It will be saved automatically when you generate resume.</div>
+        <div id="experienceList"></div>
+    </div>
+
+    <div class="section">
+        <h2>4. Skills</h2>
+        <div class="fresher-box">
+            <input type="checkbox" id="noSkill" onchange="toggleSkills()"> 
+            <label style="margin:0">I don't want to add skills</label>
+        </div>
+        <div id="skillFields">
+            <label>Choose Professional Skill</label>
+            <select id="skillSelect" onchange="addSkill(this.value)">
+                <option value="">-- Click to Select --</option>
+                <optgroup label="Office & Admin">
+                    <option>Computer Operator</option><option>Data Entry Operator</option><option>Receptionist</option><option>Office Assistant</option><option>Accountant</option>
+                </optgroup>
+                <optgroup label="Technical & IT">
+                    <option>Software Developer</option><option>Web Designer</option><option>Graphic Designer</option><option>IT Technician</option><option>Hardware & Networking</option>
+                </optgroup>
+                <optgroup label="Sales & Marketing">
+                    <option>Sales Executive</option><option>Marketing Manager</option><option>Digital Marketing</option><option>Telecaller</option><option>Business Development</option>
+                </optgroup>
+                <optgroup label="Skilled Trade">
+                    <option>Electrician</option><option>Plumber</option><option>Mechanical Technician</option><option>CNC Operator</option><option>Welder</option><option>Driver (Heavy/Light)</option>
+                </optgroup>
+                <optgroup label="Service & Logistics">
+                    <option>Security Guard</option><option>Warehouse Executive</option><option>Delivery Partner</option><option>Store Keeper</option><option>Customer Support (BPO)</option>
+                </optgroup>
+            </select>
+            <label>Or Type Custom Skill</label>
+            <input id="customSkill" placeholder="Enter skill name...">
+            <button class="btn-small" onclick="addSkill(customSkill.value)">Add Custom Skill</button>
+        </div>
+        <div id="skillList"></div>
+    </div>
+
+    <div class="section">
+        <h2>5. Career Objective</h2>
+        <label>Select a professional objective:</label>
+        <select id="objectiveSelect" onchange="addObjective(this.value)">
+            <option value="">-- Choose Objective --</option>
+            <option>To secure a challenging position in a reputable organization to utilize my skills and contribute to growth.</option>
+            <option>Hardworking fresher seeking an opportunity to start my professional career in a growth-oriented company.</option>
+            <option>To work in an environment where I can enhance my knowledge and serve the organization with loyalty.</option>
+            <option>Highly motivated individual looking for a position to use my technical and management skills for team success.</option>
+            <option>Seeking a responsible role to utilize my education and gain practical experience in a professional setup.</option>
+            <option>To be part of a progressive firm that offers career advancement and a chance to improve my performance.</option>
+            <option>Goal-oriented professional aiming to achieve excellence through sincere efforts and continuous learning.</option>
+            <option>Dedicated individual looking for a platform to demonstrate my expertise and grow alongside the organization.</option>
+            <option>To contribute to the company's success through my hard work, dedication, and adaptable nature.</option>
+            <option>Looking for an entry-level position to apply my academic knowledge and build a strong career foundation.</option>
+        </select>
+        <label>Your Objective (You can edit this)</label>
+        <textarea id="objective" rows="5" placeholder="Write your career objective here..."></textarea>
+    </div>
+
+    <div class="section">
+        <h2>6. Final Step: Profile Photo</h2>
+        <label>Upload Passport Size Photo</label>
+        <input type="file" id="photoInput" accept="image/*" onchange="previewImage(this)">
+        <img id="photoPreview">
+        <div class="fresher-box" style="margin-top:20px; border-style: solid; background: #fff8e1;">
+            <input type="checkbox" id="showPhoto" checked> 
+            <label style="margin:0"><b>Show my photo on the Resume</b> (Untick to get a Resume without photo)</label>
+        </div>
+    </div>
+
+    <button class="btn" onclick="saveAllData()">GENERATE RESUME PREVIEW</button>
+    <div style="text-align:center; margin-top:15px; color:#666; font-size:14px;">
+        <p>⚠ Note: All filled data (saved or unsaved) will be included in your resume</p>
+    </div>
+
+</div>
+
+<script>
+// Store all data
+let educations = [], experiences = [], skills = [], langs = [], photoData = null;
+
+// Load saved data if exists
+window.onload = function() {
+    // Try to load saved data from localStorage
+    const savedName = localStorage.getItem('temp_name');
+    if (savedName) {
+        document.getElementById('name').value = savedName;
+        document.getElementById('father').value = localStorage.getItem('temp_father') || '';
+        document.getElementById('email').value = localStorage.getItem('temp_email') || '';
+        document.getElementById('mobile').value = localStorage.getItem('temp_mobile') || '';
+        document.getElementById('dob').value = localStorage.getItem('temp_dob') || '';
+        document.getElementById('gender').value = localStorage.getItem('temp_gender') || 'Male';
+        document.getElementById('marital').value = localStorage.getItem('temp_marital') || 'Single';
+        document.getElementById('address').value = localStorage.getItem('temp_address') || '';
+        document.getElementById('objective').value = localStorage.getItem('temp_objective') || '';
+        
+        // Load arrays
+        const savedEducations = localStorage.getItem('temp_educations');
+        const savedExperiences = localStorage.getItem('temp_experiences');
+        const savedSkills = localStorage.getItem('temp_skills');
+        const savedLangs = localStorage.getItem('temp_langs');
+        
+        if (savedEducations) educations = JSON.parse(savedEducations);
+        if (savedExperiences) experiences = JSON.parse(savedExperiences);
+        if (savedSkills) skills = JSON.parse(savedSkills);
+        if (savedLangs) langs = JSON.parse(savedLangs);
+        
+        // Render loaded data
+        renderEdu();
+        renderExp();
+        renderSkills();
+        renderLangs();
+        
+        // Clear temp storage
+        clearTempStorage();
+    }
+    
+    // Setup input change detection
+    setupInputDetection();
+    
+    // Setup language select change handler
+    document.getElementById('languageSelect').addEventListener('change', function() {
+        if (this.value === 'custom') {
+            document.getElementById('customLangInput').style.display = 'block';
+            this.value = ''; // Reset select
+        } else if (this.value) {
+            addLang(this.value);
+        }
+    });
+};
+
+// Setup input change detection for unsaved data
+function setupInputDetection() {
+    // Education inputs
+    const eduInputs = ['eduQual', 'eduInst', 'eduYear', 'eduPercent'];
+    eduInputs.forEach(id => {
+        document.getElementById(id).addEventListener('input', checkUnsavedEducation);
+    });
+    
+    // Experience inputs
+    const expInputs = ['company', 'role', 'joinDate', 'experience'];
+    expInputs.forEach(id => {
+        document.getElementById(id).addEventListener('input', checkUnsavedExperience);
+    });
+}
+
+// Check for unsaved education data
+function checkUnsavedEducation() {
+    const currentEdu = getCurrentEducation();
+    const hasData = currentEdu.q || currentEdu.i || currentEdu.y || currentEdu.p;
+    document.getElementById('eduNotice').style.display = hasData ? 'block' : 'none';
+}
+
+// Check for unsaved experience data
+function checkUnsavedExperience() {
+    if (document.getElementById('isFresher').checked) return;
+    
+    const currentExp = getCurrentExperience();
+    const hasData = currentExp.c || currentExp.r || currentExp.j || currentExp.e;
+    document.getElementById('expNotice').style.display = hasData ? 'block' : 'none';
+}
+
+// Photo Preview
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            photoData = e.target.result;
+            document.getElementById('photoPreview').src = photoData;
+            document.getElementById('photoPreview').style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        // If no file selected, set photoData to null
+        photoData = null;
+        document.getElementById('photoPreview').style.display = 'none';
+    }
+}
+
+// Get current education data (filled but not saved)
+function getCurrentEducation() {
+    return {
+        q: document.getElementById('eduQual').value.trim(),
+        i: document.getElementById('eduInst').value.trim(),
+        y: document.getElementById('eduYear').value.trim(),
+        p: document.getElementById('eduPercent').value.trim()
+    };
+}
+
+// Get current experience data (filled but not saved)
+function getCurrentExperience() {
+    return {
+        c: document.getElementById('company').value.trim(),
+        r: document.getElementById('role').value.trim(),
+        j: document.getElementById('joinDate').value,
+        e: document.getElementById('experience').value.trim()
+    };
+}
+
+// Add Custom Language
+function addCustomLang() {
+    const customLang = document.getElementById('customLanguage').value.trim();
+    if (customLang) {
+        if (!langs.includes(customLang)) {
+            langs.push(customLang);
+            renderLangs();
+            document.getElementById('customLanguage').value = '';
+            document.getElementById('customLangInput').style.display = 'none';
+            alert("✓ Custom language added: " + customLang);
+        } else {
+            alert("This language is already added!");
+        }
+    } else {
+        alert("Please enter a language name");
+    }
+}
+
+// Add Language
+function addLang(l){
+    if(l && !langs.includes(l)){
+        langs.push(l);
+        renderLangs();
+        document.getElementById('languageSelect').value = '';
+    }
+}
+
+function renderLangs(){
+    if (langs.length === 0) {
+        langList.innerHTML = '<div style="color:#666; font-size:14px; text-align:center; padding:10px; background:#f5f5f5; border-radius:8px;">No languages added yet. Select from dropdown or add custom language.</div>';
+    } else {
+        langList.innerHTML = langs.map(l => 
+            `<span class="language-tag">
+                ${l} 
+                <span class="remove-btn" onclick="removeLang('${l}')" title="Remove">×</span>
+            </span>`
+        ).join('');
+    }
+}
+
+function removeLang(lang){
+    if (confirm(`Remove "${lang}" from languages?`)) {
+        langs = langs.filter(l => l !== lang);
+        renderLangs();
+    }
+}
+
+// Education Logic
+function addEducation(){
+    const currentEdu = getCurrentEducation();
+    
+    if(!currentEdu.q) {
+        alert("Please enter qualification");
+        return;
+    }
+    
+    // Check if already exists
+    const exists = educations.some(edu => 
+        edu.q === currentEdu.q && 
+        edu.i === currentEdu.i &&
+        edu.y === currentEdu.y
+    );
+    
+    if (!exists) {
+        educations.push(currentEdu);
+        renderEdu();
+        
+        // Clear inputs and hide notice
+        document.getElementById('eduQual').value = '';
+        document.getElementById('eduInst').value = '';
+        document.getElementById('eduYear').value = '';
+        document.getElementById('eduPercent').value = '';
+        document.getElementById('eduNotice').style.display = 'none';
+        
+        alert("✓ Education entry saved!");
+    } else {
+        alert("This education entry already exists!");
+    }
+}
+
+function renderEdu(){
+    educationList.innerHTML = educations.map((e, i) => `
+        <div class="card">
+            <b>${e.q || 'Not Specified'}</b><br>
+            ${e.i ? e.i + '<br>' : ''}
+            ${e.y || e.p ? `${e.y || ''}${e.y && e.p ? ' | ' : ''}${e.p || ''}` : ''}
+            <div class="action-btns">
+                <button class="btn-edit" onclick="editEdu(${i})">Edit</button>
+                <button class="btn-del" onclick="removeEdu(${i})">Delete</button>
+            </div>
+        </div>`).join('');
+}
+
+function removeEdu(i){ 
+    educations.splice(i,1); 
+    renderEdu(); 
+}
+
+function editEdu(i){
+    let item = educations[i];
+    document.getElementById('eduQual').value = item.q || '';
+    document.getElementById('eduInst').value = item.i || '';
+    document.getElementById('eduYear').value = item.y || '';
+    document.getElementById('eduPercent').value = item.p || '';
+    educations.splice(i,1);
+    renderEdu();
+    document.getElementById('eduNotice').style.display = 'block';
+}
+
+// Experience Logic
+function toggleExp(){
+    const isFresher = document.getElementById('isFresher').checked;
+    document.getElementById('expFields').style.display = isFresher ? "none" : "block";
+    document.getElementById('expNotice').style.display = 'none';
+    
+    if(isFresher) { 
+        experiences = []; 
+        document.getElementById('experienceList').innerHTML = ""; 
+    }
+}
+
+function addExperience(){
+    const currentExp = getCurrentExperience();
+    
+    if(!currentExp.c) {
+        alert("Please enter company name");
+        return;
+    }
+    
+    // Check if already exists
+    const exists = experiences.some(exp => 
+        exp.c === currentExp.c && 
+        exp.r === currentExp.r
+    );
+    
+    if (!exists) {
+        experiences.push(currentExp);
+        renderExp();
+        
+        // Clear inputs and hide notice
+        document.getElementById('company').value = '';
+        document.getElementById('role').value = '';
+        document.getElementById('joinDate').value = '';
+        document.getElementById('experience').value = '';
+        document.getElementById('expNotice').style.display = 'none';
+        
+        alert("✓ Experience entry saved!");
+    } else {
+        alert("This experience entry already exists!");
+    }
+}
+
+function renderExp(){
+    document.getElementById('experienceList').innerHTML = experiences.map((ex, i) => `
+        <div class="card">
+            <b>${ex.r || 'Not Specified'}</b> ${ex.c ? 'at ' + ex.c : ''}<br>
+            ${ex.e ? ex.e + ' Experience' : ''}
+            ${ex.j ? (ex.e ? ' | ' : '') + 'Joined: ' + ex.j : ''}
+            <div class="action-btns">
+                <button class="btn-edit" onclick="editExp(${i})">Edit</button>
+                <button class="btn-del" onclick="removeExp(${i})">Delete</button>
+            </div>
+        </div>`).join('');
+}
+
+function removeExp(i){ 
+    experiences.splice(i,1); 
+    renderExp(); 
+}
+
+function editExp(i){
+    let item = experiences[i];
+    document.getElementById('company').value = item.c || '';
+    document.getElementById('role').value = item.r || '';
+    document.getElementById('joinDate').value = item.j || '';
+    document.getElementById('experience').value = item.e || '';
+    experiences.splice(i,1);
+    renderExp();
+    document.getElementById('expNotice').style.display = 'block';
+}
+
+// Skills Logic
+function toggleSkills(){
+    const noSkill = document.getElementById('noSkill').checked;
+    document.getElementById('skillFields').style.display = noSkill ? "none" : "block";
+    if(noSkill) { 
+        skills = []; 
+        document.getElementById('skillList').innerHTML = ""; 
+    }
+}
+
+function addSkill(skill){
+    skill = skill.trim();
+    if(skill && !skills.includes(skill)){
+        skills.push(skill);
+        renderSkills();
+        document.getElementById('customSkill').value = "";
+        document.getElementById('skillSelect').value = "";
+    }
+}
+
+function renderSkills(){
+    document.getElementById('skillList').innerHTML = skills.map((s, i) => 
+        `<span class="tag">${s} <span style="cursor:pointer;margin-left:5px" onclick="removeSkill(${i})">×</span></span>`
+    ).join('');
+}
+
+function removeSkill(i){ 
+    skills.splice(i,1); 
+    renderSkills(); 
+}
+
+function addObjective(val){ 
+    if(val) document.getElementById('objective').value = val; 
+}
+
+// Check if photo data is valid
+function isValidPhotoData(data) {
+    if (!data || data === '' || data === null) return false;
+    if (!data.startsWith('data:image/')) return false;
+    if (data.length < 100) return false; // Too short to be a real image
+    return true;
+}
+
+// Main Save Data Function
+function saveAllData() {
+    // 1. Validate name (required field)
+    const name = document.getElementById('name').value.trim();
+    if (!name) {
+        alert("Please enter your name");
+        document.getElementById('name').focus();
+        return;
+    }
+    
+    // 2. Check for unsaved education data and add it
+    const currentEdu = getCurrentEducation();
+    if (currentEdu.q || currentEdu.i || currentEdu.y || currentEdu.p) {
+        // Check if already exists
+        const exists = educations.some(edu => 
+            edu.q === currentEdu.q && 
+            edu.i === currentEdu.i &&
+            edu.y === currentEdu.y
+        );
+        if (!exists) {
+            educations.push(currentEdu);
+            console.log('Added unsaved education:', currentEdu);
+        }
+    }
+    
+    // 3. Check for unsaved experience data and add it
+    if (!document.getElementById('isFresher').checked) {
+        const currentExp = getCurrentExperience();
+        if (currentExp.c || currentExp.r || currentExp.j || currentExp.e) {
+            // Check if already exists
+            const exists = experiences.some(exp => 
+                exp.c === currentExp.c && 
+                exp.r === currentExp.r
+            );
+            if (!exists) {
+                experiences.push(currentExp);
+                console.log('Added unsaved experience:', currentExp);
+            }
+        }
+    }
+    
+    // 4. Check for unsaved skills (from select or custom)
+    const selectedSkill = document.getElementById('skillSelect').value;
+    const customSkill = document.getElementById('customSkill').value.trim();
+    
+    if (selectedSkill && !skills.includes(selectedSkill)) {
+        skills.push(selectedSkill);
+    }
+    if (customSkill && !skills.includes(customSkill)) {
+        skills.push(customSkill);
+    }
+    
+    // 5. Check for unsaved language
+    const selectedLang = document.getElementById('languageSelect').value;
+    if (selectedLang && selectedLang !== 'custom' && !langs.includes(selectedLang)) {
+        langs.push(selectedLang);
+    }
+    
+    // 6. Get objective (use selected or typed)
+    let objective = document.getElementById('objective').value.trim();
+    if (!objective) {
+        const selectedObjective = document.getElementById('objectiveSelect').value;
+        objective = selectedObjective || "To secure a challenging position in a reputable organization to utilize my skills and contribute to growth.";
+    }
+    
+    // 7. Save ALL data to localStorage
+    localStorage.setItem('resume_name', name);
+    localStorage.setItem('resume_father', document.getElementById('father').value.trim());
+    localStorage.setItem('resume_email', document.getElementById('email').value.trim());
+    localStorage.setItem('resume_mobile', document.getElementById('mobile').value.trim());
+    localStorage.setItem('resume_dob', document.getElementById('dob').value);
+    localStorage.setItem('resume_gender', document.getElementById('gender').value);
+    localStorage.setItem('resume_marital', document.getElementById('marital').value);
+    localStorage.setItem('resume_address', document.getElementById('address').value.trim());
+    localStorage.setItem('resume_objective', objective);
+    localStorage.setItem('resume_isFresher', document.getElementById('isFresher').checked);
+    localStorage.setItem('resume_showPhoto', document.getElementById('showPhoto').checked);
+    
+    // Save arrays
+    localStorage.setItem('resume_educations', JSON.stringify(educations));
+    localStorage.setItem('resume_experiences', JSON.stringify(experiences));
+    localStorage.setItem('resume_skills', JSON.stringify(skills));
+    localStorage.setItem('resume_langs', JSON.stringify(langs));
+    
+    // FIXED: Save photo ONLY if it's valid
+    if (isValidPhotoData(photoData)) {
+        localStorage.setItem('resume_photo', photoData);
+        console.log('✓ Valid photo saved');
+    } else {
+        // Remove any existing photo data
+        localStorage.removeItem('resume_photo');
+        console.log('✗ No valid photo, removed from storage');
+    }
+    
+    // 8. Show success message
+    let message = '✓ Resume saved successfully!\n\n';
+    message += `Name: ${name}\n`;
+    message += `Education Entries: ${educations.length}\n`;
+    message += `Experience Entries: ${experiences.length}\n`;
+    message += `Skills: ${skills.length}\n`;
+    message += `Languages: ${langs.length}\n`;
+    message += `Photo: ${isValidPhotoData(photoData) ? '✓ Added' : '✗ Not added'}`;
+    
+    alert(message);
+    
+    // 9. Redirect to preview page
+    window.location.href = "preview.html";
+}
+
+// Clear temp storage
+function clearTempStorage() {
+    localStorage.removeItem('temp_name');
+    localStorage.removeItem('temp_father');
+    localStorage.removeItem('temp_email');
+    localStorage.removeItem('temp_mobile');
+    localStorage.removeItem('temp_dob');
+    localStorage.removeItem('temp_gender');
+    localStorage.removeItem('temp_marital');
+    localStorage.removeItem('temp_address');
+    localStorage.removeItem('temp_objective');
+    localStorage.removeItem('temp_educations');
+    localStorage.removeItem('temp_experiences');
+    localStorage.removeItem('temp_skills');
+    localStorage.removeItem('temp_langs');
+    localStorage.removeItem('temp_photo');
+    localStorage.removeItem('temp_isFresher');
+    localStorage.removeItem('temp_showPhoto');
+}
+
+</script>
+</body>
+</html>
